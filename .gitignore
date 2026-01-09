@@ -1,5 +1,11 @@
+.DS_Store
 .venv/
 __pycache__/
 *.pyc
-data/generated/
-.env
+
+dbt/target/
+dbt/logs/
+dbt/.user.yml
+
+*.duckdb
+*.duckdb.wal
