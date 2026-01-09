@@ -9,3 +9,4 @@ dbt/.user.yml
 
 *.duckdb
 *.duckdb.wal
+data/generated/
