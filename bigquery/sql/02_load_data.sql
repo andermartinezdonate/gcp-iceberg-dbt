@@ -1,12 +1,11 @@
 -- ============================================
 -- File: 02_load_data.sql
--- Purpose: Load Parquet files into Iceberg tables (create snapshots)
--- Project: gcp-iceberg-dbt
--- Location: europe-west3
+-- Purpose: Register Parquet files as Iceberg snapshots
 -- Notes:
---   - Data remains in GCS
---   - LOAD DATA registers files in Iceberg metadata
+--   - No data is copied
+--   - Each LOAD DATA creates a new snapshot
 -- ============================================
+
 
 -- Customers
 LOAD DATA INTO `gcp-iceberg-dbt.analytics_iceberg.customers`
