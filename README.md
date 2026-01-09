@@ -29,18 +29,36 @@ dbt (staging → marts, tests)
 ## Repository Structure
 gcp-iceberg-dbt/
 │
-├── architecture/ # Architecture diagrams and explanations
-├── bigquery/ # BigQuery SQL (external tables, views, examples)
-├── iceberg/ # Iceberg table definitions and snapshot examples
-├── dbt/ # dbt project (staging, marts, snapshots)
+├── architecture/
+│   └── architecture.md        # Lakehouse + Iceberg architecture explanation
+│
+├── bigquery/
+│   └── sql/
+│       ├── 01_create_iceberg_tables.sql   # CREATE TABLE (Iceberg)
+│       └── 02_load_data.sql               # LOAD DATA (Iceberg snapshots)
+│
+├── iceberg/
+│   └── README.md               # Iceberg concepts: snapshots, time travel, notes
+│
+├── dbt/
+│   ├── models/
+│   │   ├── staging/
+│   │   └── marts/
+│   └── README.md               # dbt-on-Iceberg notes
+│
 ├── data/
-│ ├── raw/ # Raw input data (local or GCS)
-│ └── generated/ # Generated data (gitignored, reproducible)
-├── scripts/ # Bootstrap and helper scripts
-├── sql/ # Standalone SQL examples
-├── src/ # Data generation / helper Python code
+│   └── generated/              # Generated Parquet data (gitignored, reproducible)
+│
+├── scripts/
+│   └── bootstrap_repo.sh       # Optional repo setup helpers
+│
+├── src/
+│   └── generate_commerce_data_soft.py  # Parquet data generator
+│
 ├── .gitignore
+├── requirements.txt
 └── README.md
+
 
 
 ---
