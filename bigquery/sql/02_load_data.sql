@@ -6,7 +6,6 @@
 --   - Each LOAD DATA creates a new snapshot
 -- ============================================
 
-
 -- Customers
 LOAD DATA INTO `gcp-iceberg-dbt.analytics_iceberg.customers`
 FROM FILES (
