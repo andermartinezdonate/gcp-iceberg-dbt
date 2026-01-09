@@ -1,0 +1,22 @@
+name: gcp_iceberg_dbt
+profile: jaffle_shop
+
+seed-paths: ["seeds"]
+model-paths: ["models"]
+macro-paths: ["macros"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+seeds:
+  gcp_iceberg_dbt:
+    +schema: raw
+
+models:
+  gcp_iceberg_dbt:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
+
