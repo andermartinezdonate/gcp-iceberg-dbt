@@ -34,26 +34,26 @@ gcp-iceberg-dbt/
 │
 ├── bigquery/
 │   └── sql/
-│       ├── 01_create_iceberg_tables.sql   # CREATE TABLE (Iceberg)
-│       └── 02_load_data.sql               # LOAD DATA (Iceberg snapshots)
+│       ├── 01_external_tables.sql        # External tables over raw Parquet (read-only)
+│       └── 02_create_iceberg_tables.sql  # CTAS → create Iceberg tables in GCS
 │
 ├── iceberg/
-│   └── README.md               # Iceberg concepts: snapshots, time travel, notes
+│   └── README.md              # Iceberg concepts (metadata, snapshots, engines)
 │
 ├── dbt/
 │   ├── models/
 │   │   ├── staging/
 │   │   └── marts/
-│   └── README.md               # dbt-on-Iceberg notes
+│   └── README.md              # dbt-on-Iceberg notes
 │
 ├── data/
-│   └── generated/              # Generated Parquet data (gitignored, reproducible)
+│   └── generated/             # Generated Parquet data (gitignored, reproducible)
 │
 ├── scripts/
-│   └── bootstrap_repo.sh       # Optional repo setup helpers
+│   └── bootstrap_repo.sh      # Optional repo setup helpers
 │
 ├── src/
-│   └── generate_commerce_data_soft.py  # Parquet data generator
+│   └── generate_commerce_data_soft.py    # Parquet data generator
 │
 ├── .gitignore
 ├── requirements.txt
@@ -86,6 +86,8 @@ gcp-iceberg-dbt/
 ---
 
 ## How to Run (High Level)
+⚠️ BigQuery processing location must be set to `europe-west3` for all queries.
+
 
 1. Configure GCP credentials
 2. Upload raw data to GCS
@@ -108,14 +110,18 @@ This mirrors real-world modern data platforms.
 
 ---
 
-## Status
 
-🚧 Work in progress  
-Planned additions:
-- Full GCS bootstrap scripts
-- Iceberg snapshot/time-travel demos
-- dbt tests and documentation
+## Current State (Working)
 
+- Source of truth: Parquet files in GCS (`raw/commerce/*/data`)
+- Iceberg tables created in BigQuery:
+  - analytics_iceberg.customers
+  - analytics_iceberg.orders
+  - analytics_iceberg.order_items
+  - analytics_iceberg.products
+- Iceberg storage location:
+  gs://gcp-iceberg-dbt-iceberg/iceberg/commerce/*
+- Created via BigQuery CTAS using Cloud Resource connection
 
 ---
 

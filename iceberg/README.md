@@ -34,77 +34,77 @@ It stores **metadata that references data files**.
 
 ---
 
-## Iceberg table lifecycle
+## Iceberg table lifecycle (BigQuery-managed, CTAS)
 
-### 1. Create table (schema + storage)
+### 1. Create Iceberg table and load data (CTAS)
 
-Iceberg tables are created explicitly using BigQuery SQL.
-This step defines:
+In this project, Iceberg tables are created using **BigQuery CTAS**
+(**CREATE TABLE AS SELECT**).
 
-- Table schema
-- Iceberg table format
-- Storage location in GCS
-- Connection used to manage Iceberg metadata
+This single step:
 
-**No data is loaded at this stage.**
+- Defines the table schema  
+- Specifies the Iceberg table format  
+- Specifies the storage location in GCS  
+- Writes Parquet data files  
+- Creates Iceberg metadata  
 
 Example:
 
-'''sql
-CREATE TABLE analytics_iceberg.orders (
-  order_id STRING,
-  customer_id STRING,
-  order_ts TIMESTAMP,
-  order_status STRING,
-  currency STRING,
-  total_amount FLOAT64,
-  payment_status STRING,
-  source_system STRING,
-  ingested_at TIMESTAMP
-)
+```sql
+CREATE OR REPLACE TABLE analytics_iceberg.orders
 WITH CONNECTION `europe-west3.iceberg_gcs`
 OPTIONS (
   table_format = 'ICEBERG',
-  file_format = 'PARQUET',
-  storage_uri = 'gs://gcp-iceberg-dbt-raw/raw/commerce/orders/'
-);'''
+  file_format  = 'PARQUET',
+  storage_uri  = 'gs://gcp-iceberg-dbt-iceberg/iceberg/commerce/orders/'
+) AS
+SELECT *
+FROM analytics_source.orders_data;
+
+What happens during this step:
+
+- BigQuery reads raw Parquet via external tables
+- BigQuery writes **new Parquet files** to the Iceberg location
+- Iceberg metadata is written to GCS
+- A consistent Iceberg table state is created
 
 After this step:
 
-✅ Iceberg table exists
+- ✅ Iceberg table exists  
+- ✅ Data is queryable  
+- ✅ Iceberg metadata is present  
+- ⚠️ Snapshot internals are managed by BigQuery  
 
-❌ No data is visible
+---
 
-❌ No snapshot exists
+## Notes on snapshots in BigQuery
 
-This is expected Iceberg behavior.
+When using BigQuery as the Iceberg engine:
 
+- Snapshots are created as part of CTAS and write operations
+- Iceberg metadata files are stored in GCS
+- Snapshot inspection is **not fully exposed via SQL**
+- Table versioning is still guaranteed by Iceberg semantics
 
-### 2. Create table (schema + storage)
+This behavior differs from Spark / Trino Iceberg engines, where snapshots are directly queryable.
 
-Data becomes visible only after running LOAD DATA.
+---
 
-This operation:
+## Why `LOAD DATA` is not used in this project
 
-Registers existing Parquet files
+This repository intentionally uses **CTAS only** to:
 
-Creates a new Iceberg snapshot
+- Keep ingestion deterministic and reproducible
+- Avoid multiple ingestion strategies
+- Clearly separate:
+  - **raw data access** (external tables)
+  - **Iceberg table creation** (CTAS)
 
-Does not copy or move data
+`LOAD DATA` is a valid Iceberg operation, but it is **out of scope** for this project.
 
-Is atomic
+---
 
-'''sql
-LOAD DATA INTO analytics_iceberg.orders
-FROM FILES (
-  format = 'PARQUET',
-  uris = ['gs://gcp-iceberg-dbt-raw/raw/commerce/orders/load_date=2026-01-09/*.parquet']
-);'''
+## Summary
 
-After this step:
-
-✅ Snapshot is created
-
-✅ Data becomes queryable
-
-✅ Iceberg metadata references the files
+> In this project, BigQuery creates and manages Iceberg tables in GCS using CTAS, writing both data files and Iceberg metadata in a single step.
