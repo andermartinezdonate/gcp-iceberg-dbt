@@ -6,7 +6,17 @@ __pycache__/
 dbt/target/
 dbt/logs/
 dbt/.user.yml
+dbt/**/target/
+dbt/**/logs/
+dbt/**/dbt_packages/
+dbt/**/dbt_internal_packages/
 
 *.duckdb
 *.duckdb.wal
+
 data/generated/
+
+.env
+.env.*
+.vscode/
+

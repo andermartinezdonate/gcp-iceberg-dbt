@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: iceberg
+    database: "gcp-iceberg-dbt"
+    schema: "analytics_iceberg"
+    tables:
+      - name: customers
+      - name: orders
+      - name: order_items
+      - name: products
