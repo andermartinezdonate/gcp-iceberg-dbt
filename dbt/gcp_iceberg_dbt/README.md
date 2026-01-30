@@ -10,7 +10,7 @@ The focus of this layer is to transform raw Iceberg-backed data into
 
 ## Model Structure
 
-```text
+'''text
 models/
 ├── staging/
 │   ├── stg_orders.sql
@@ -22,7 +22,7 @@ models/
     ├── fct_orders_enriched.sql
     ├── dim_customers.sql
     ├── dim_products.sql
-    └── schema.yml```
+    └── schema.yml'''
 
 
 ## Analytics Design
