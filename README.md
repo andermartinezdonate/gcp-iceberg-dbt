@@ -101,7 +101,7 @@ This mirrors real-world modern data platforms.
 
 ---
 
-## Current State (Working)
+## Current State 
 
 - Source of truth: Parquet files in GCS (`raw/commerce/*/data`)
 - Iceberg tables created in BigQuery:
