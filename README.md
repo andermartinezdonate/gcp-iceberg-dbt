@@ -49,7 +49,7 @@ gcp-iceberg-dbt/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
-
+```
 
 
 ---
