@@ -1,6 +1,11 @@
 {{ config(materialized='table') }}
 
-with orders as (
+with customers as (
+  select customer_id
+  from {{ ref('dim_customers') }}
+),
+
+orders as (
   select
     customer_id,
     order_date,
@@ -44,7 +49,8 @@ customer_ordering_behavior as (
 )
 
 select
-  cb.customer_id,
+  c.customer_id,
+
   cb.first_order_date,
   cb.last_order_date,
   cb.total_orders,
@@ -54,7 +60,7 @@ select
   cr.days_since_last_order,
   (cr.days_since_last_order <= 30) as is_active_last_30d,
 
-  coalesce(cob.avg_days_between_orders, null) as avg_days_between_orders,
+  cob.avg_days_between_orders,
 
   (cb.total_orders > 1) as is_repeat_customer,
 
@@ -63,8 +69,7 @@ select
     when cb.lifetime_revenue >= 200 then 'mid_value'
     else 'low_value'
   end as customer_segment
-from customer_base cb
-left join customer_recency cr
-  on cb.customer_id = cr.customer_id
-left join customer_ordering_behavior cob
-  on cb.customer_id = cob.customer_id
+from customers c
+left join customer_base cb using (customer_id)
+left join customer_recency cr using (customer_id)
+left join customer_ordering_behavior cob using (customer_id)
