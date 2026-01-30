@@ -22,7 +22,7 @@ models/
     ├── fct_orders_enriched.sql
     ├── dim_customers.sql
     ├── dim_products.sql
-    └── schema.yml
+    └── schema.yml```
 
 
 ## Analytics Design
