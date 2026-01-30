@@ -127,3 +127,25 @@ models:
       - name: is_active
         description: "Whether the product is active."
         tests: [not_null]
+
+  - name: mart_customer_metrics
+    description: "Customer-level analytics mart with revenue, recency, and ordering behavior metrics."
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: first_order_date
+        tests: [not_null]
+      - name: last_order_date
+        tests: [not_null]
+      - name: total_orders
+        tests: [not_null]
+      - name: lifetime_revenue
+        tests: [not_null]
+      - name: days_since_last_order
+        tests: [not_null]
+      - name: is_active_last_30d
+        tests: [not_null]
+      - name: is_repeat_customer
+        tests: [not_null]
+      - name: customer_segment
+        tests: [not_null]
