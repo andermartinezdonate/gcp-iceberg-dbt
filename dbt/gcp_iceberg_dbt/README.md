@@ -43,8 +43,7 @@ between **scalable ingestion logic** and **history-dependent business logic**.
 
 - **fct_orders_enriched**  
   Semantic order fact derived from `fct_orders`.  
-  Computes history-dependent logic such as:
-  - `is_first_order`
+  Computes history-dependent logic such as: `is_first_order`
 
 ### Dimension tables
 
